@@ -115,8 +115,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             new Main().testCreation();
-            //new Main().testMultipleInsertions();
-            //new Main().testMultipleSearches();
+            new Main().testMultipleInsertions();
+            new Main().testMultipleSearches();
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
