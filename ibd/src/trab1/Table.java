@@ -128,27 +128,8 @@ public class Table {
             try {
                 
                 Block block = bufferManager.getBlock(i, databaseIO);
-                //if (primaryKey < getMaiorRegistro(i).getPrimaryKey()) {
-                if (!block.isFull()) {
-                    if (primaryKey < block.getMaiorRegistro()) {
-                        return i;
-                    } else {
-                        //continue;
-                    }
-                } else {
-                    if (primaryKey < block.getMaiorRegistro()) {
-                        //  Senão, salva o maior num Registro temporário,
-                        //  retira ele do bloco, manda ele ser inserido nos blocos seguintes
-                        //  e retorna o id do bloco que será inserido o Registro atual
-                        long reg = block.getMaiorRegistro();
-                        Record registro = getRecord(reg);
-                        removeRecord(registro);
-                        // Chama a função que vai passando reg pros blocos seguintes:
-                        insereOrdenado(reg, block.block_id);
-                        return i;
-                    }
-                }
-                /*if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
+
+                if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
                     // Se não estiver cheio, insere aqui
                     if (!block.isFull()) {
                         return i;
@@ -165,7 +146,7 @@ public class Table {
                     }
                 } else {
                     continue;
-                }*/
+                }
                 
             } catch (Exception ex) {
                 Logger.getLogger(Table.class.getName()).log(Level.SEVERE, null, ex);
@@ -185,28 +166,7 @@ public class Table {
             
             Block block = bufferManager.getBlock(blockId, databaseIO);
             
-            if (!block.isFull()) {
-                if (primaryKey < block.getMaiorRegistro()) {
-                    addRecord(block, getRecord(primaryKey));
-                } else {
-                    insereOrdenado(primaryKey, blockId+1);
-                    return;
-                }
-            } else {
-                if (primaryKey < block.getMaiorRegistro()) {
-                    long reg = block.getMaiorRegistro();
-                    Record registro = getRecord(reg);
-                    removeRecord(registro);
-                    addRecord(block, getRecord(primaryKey));
-                    insereOrdenado(reg, blockId+1);
-                    return;
-                } else {
-                    insereOrdenado(primaryKey, blockId+1);
-                    return;
-                }
-            }
-            
-            /*if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
+            if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
                 if (!block.isFull()) {
                     addRecord(block, getRecord(primaryKey));
                 } else {
@@ -220,7 +180,7 @@ public class Table {
             } else {
                 insereOrdenado(primaryKey, blockId+1);
                 return;
-            }*/
+            }
             
         } catch (Exception ex) {
             Logger.getLogger(Table.class.getName()).log(Level.SEVERE, null, ex);
