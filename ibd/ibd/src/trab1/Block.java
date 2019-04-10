@@ -98,47 +98,22 @@ public class Block {
     
     }
 
-    ///////////////////////
-    // MÉTODOS IMPLEMENTADOS PARA O TRABALHO
     
-    public long getMaiorRegistro() {
-        Long maior = 0L;
-        
-        if (isEmpty()) {
-            return 0;
-        }
-        
+    
+    public Record getMaiorRegistro () {
+        Record maior = records[0];
         for (Record record : records) {
-            try {
-                if (record.getPrimaryKey() > maior) {
-                    maior = record.getPrimaryKey();
-                }
-            } catch (Exception ex) {
-                break;
+            if (record == null){
+                continue;
+            }
+            if (record.getPrimaryKey() > maior.getPrimaryKey()) {
+                maior = record;
             }
         }
-        
-        
-/*        for (int i = 0; i < records.length; i++) {
-            //System.out.println(i);
-            if (!(records[i] == null)) {
-                if (records[i].getPrimaryKey() >= maior) {
-                    maior = records[i].getPrimaryKey();
-                }
-            }
-
-        }*/
         return maior;
     }
     
-    public boolean isEmpty() {
-        for (int i = 0; i < records.length; i++) {
-            if (!(records[i] == null)) {
-                return false;
-            }
-        }
-        return true;
-    }
+    
     
     
 }
