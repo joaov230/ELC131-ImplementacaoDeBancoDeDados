@@ -108,9 +108,8 @@ public class Block {
             return 0;
         }
         
-        
         for (int i = 0; i < records.length; i++) {
-            System.out.println(i);
+            //System.out.println(i);
             if (!(records[i] == null)) {
                 if (records[i].getPrimaryKey() >= maior) {
                     maior = records[i].getPrimaryKey();

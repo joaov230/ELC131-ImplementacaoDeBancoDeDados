@@ -81,7 +81,7 @@ public class Table {
 
     private void addRecord(Block block, Record rec) throws Exception {
     
-    block.addRecord(rec, -1L);
+        block.addRecord(rec, -1L);
 
         if (block.isFull()) {
             organizer.removeFreeBlock(block.block_id);
@@ -123,16 +123,32 @@ public class Table {
     */
     
     private Long selectBlock(long primaryKey) {
-        
-        for (long i = 0; i < BLOCKS_AMOUNT; i++) {
-            try {
-                
+         for (long i = 0; i < BLOCKS_AMOUNT; i++) {
+            try {         
                 Block block = bufferManager.getBlock(i, databaseIO);
 
+                if (block.isEmpty()) {
+                    return block.block_id;
+                }
+                
+                if (primaryKey < block.getMaiorRegistro()) {
+                    if (block.isFull()) {
+                        long reg = block.getMaiorRegistro();
+                        Record registro = getRecord(reg);
+                        removeRecord(registro);
+                        // Chama a função que vai passando reg pros blocos seguintes:
+                        insereOrdenado(reg, block.block_id);
+                        return block.block_id;
+                    } else {
+                        return block.block_id;
+                    }
+                }
+                
+                /*
                 if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
                     // Se não estiver cheio, insere aqui
                     if (!block.isFull()) {
-                        return i;
+                        return block.block_id;
                     } else {
                         //  Senão, salva o maior num Registro temporário,
                         //  retira ele do bloco, manda ele ser inserido nos blocos seguintes
@@ -146,7 +162,7 @@ public class Table {
                     }
                 } else {
                     continue;
-                }
+                }*/
                 
             } catch (Exception ex) {
                 Logger.getLogger(Table.class.getName()).log(Level.SEVERE, null, ex);
@@ -156,9 +172,8 @@ public class Table {
     }
     
     // Passa o registro a diante nos blocos seguintes
-    private void insereOrdenado(Long primaryKey, Long blockId) {
-        
-        if (blockId > BLOCKS_AMOUNT) {
+    private void insereOrdenado(Long primaryKey, Long blockId) {     
+        if (blockId == BLOCKS_AMOUNT-1) {
             return;
         }
         
@@ -166,7 +181,32 @@ public class Table {
             
             Block block = bufferManager.getBlock(blockId, databaseIO);
             
-            if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
+            if (block.isEmpty()) {
+                //Insere se tiver vazio
+                addRecord(block, getRecord(primaryKey));
+                return;
+            }
+            
+            // A partir daqui não tá mais vazio
+                
+            if (primaryKey < block.getMaiorRegistro()) {
+                
+                if (block.isFull()) {
+                    long reg = block.getMaiorRegistro();
+                    Record registro = getRecord(reg);
+                    removeRecord(registro);
+                    addRecord(block, getRecord(primaryKey));
+                    insereOrdenado(reg, blockId+1);
+                    return;
+                } else {
+                    addRecord(block, getRecord(primaryKey));
+                }
+            } else {
+                insereOrdenado(primaryKey, blockId+1);
+                return;
+            }
+            
+            /*if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
                 if (!block.isFull()) {
                     addRecord(block, getRecord(primaryKey));
                 } else {
@@ -180,12 +220,11 @@ public class Table {
             } else {
                 insereOrdenado(primaryKey, blockId+1);
                 return;
-            }
+            }*/
             
         } catch (Exception ex) {
             Logger.getLogger(Table.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         return;
     }
     
