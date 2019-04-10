@@ -104,7 +104,7 @@ public class Table {
                 } else if (primaryKey < block.getMaiorRegistro().getPrimaryKey()) {
                     Record registroSalvo = block.getMaiorRegistro();
                     removeRecord(block.getMaiorRegistro());
-                    //Função auxiliar
+                    //Função auxiliar TESTANDO
                     auxiliar(registroSalvo, block.block_id+1);
                     
                     return block.block_id;
