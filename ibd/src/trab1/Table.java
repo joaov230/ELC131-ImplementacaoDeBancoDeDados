@@ -133,32 +133,12 @@ public class Table {
                 
                 if (primaryKey < block.getMaiorRegistro()) {
                     if (block.isFull()) {
-                        long reg = block.getMaiorRegistro();
-                        Record registroSalvo = getRecord(reg);
-                        Record registroRemovido = registroSalvo;
-                        removeRecord(registroRemovido);
-                        for (long j = i+1; j < BLOCKS_AMOUNT; j++) {
-                            Block block2 = bufferManager.getBlock(j, databaseIO);
-                            if (block2.isEmpty()) {
-                                this.addRecord(block2, registroSalvo);
-                            }
-                            
-                            if (registroSalvo.getPrimaryKey() < block2.getMaiorRegistro() && !block2.isFull()) {
-                                this.addRecord(block2, registroSalvo);
-                            } else if (registroSalvo.getPrimaryKey() < block2.getMaiorRegistro() && block2.isFull()) {
-                                long temp = block2.getMaiorRegistro();
-                                if (temp == 0)
-                                    break;
-                                registroRemovido = getRecord(temp);
-                                removeRecord(registroRemovido);
-                                this.addRecord(block2, registroSalvo);
-                                registroSalvo = registroRemovido;
-                                continue;
-                            }
-                            
-                        }
+                        long registroSalvo = block.getMaiorRegistro();
+                        removeRecord(getRecord(registroSalvo));
+                        //selectBlock(registroSalvo);
+                        
                         // Chama a função que vai passando reg pros blocos seguintes:
-                       // insereOrdenado(reg, block.block_id);
+                        insereOrdenado(registroSalvo, block.block_id+1);
                         return block.block_id;
                     } else {
                         return block.block_id;
@@ -166,15 +146,15 @@ public class Table {
                 }
                 
             } catch (Exception ex) {
-                //Logger.getLogger(Table.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Table.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return null;
     }
     
     // Passa o registro a diante nos blocos seguintes
-   /* private void insereOrdenado(Long primaryKey, Long blockId) {     
-        if (blockId == BLOCKS_AMOUNT-1) {
+    private void insereOrdenado(Long primaryKey, Long blockId) {     
+        if (blockId >= BLOCKS_AMOUNT-1) {
             return;
         }
         
@@ -192,43 +172,28 @@ public class Table {
                 
             if (primaryKey < block.getMaiorRegistro()) {
                 
-                if (block.isFull()) {
-                    long reg = block.getMaiorRegistro();
-                    Record registro = getRecord(reg);
-                    removeRecord(registro);
-                    addRecord(block, getRecord(primaryKey));
-                    insereOrdenado(reg, blockId+1);
+                if (block.isFull()) { // É AQUI O PROBLEMA (AO RETIRAR UM ELEMENTO, ELE DÁ ERRO)
+                    
+                    long reg = block.getMaiorRegistro(); // Chave primária do maior registro do bloco
+                    Record registro = getRecord(reg); // Pega o registro da chave primária
+                    removeRecord(registro); // Remove esse registro
+                    addRecord(block, getRecord(primaryKey)); // Adiciona o registro que pertence a esse bloco
+                    insereOrdenado(reg, blockId+1); // Recursão para o registro que foi removido ser inserido em algum bloco
+                                                    // na frente
                     return;
-                } else {
+                } else { // O ERRO LEVA ELE PRA CÁ, E DÁ NULL POINTER EXCEPTION NESSA LINHA ABAIXO
                     addRecord(block, getRecord(primaryKey));
                 }
             } else {
                 insereOrdenado(primaryKey, blockId+1);
                 return;
             }
-            
-            /*if (primaryKey < block.getMaiorRegistro() || block.isEmpty()) {
-                if (!block.isFull()) {
-                    addRecord(block, getRecord(primaryKey));
-                } else {
-                    long reg = block.getMaiorRegistro();
-                    Record registro = getRecord(reg);
-                    removeRecord(registro);
-                    addRecord(block, getRecord(primaryKey));
-                    insereOrdenado(reg, blockId+1);
-                    return;
-                }
-            } else {
-                insereOrdenado(primaryKey, blockId+1);
-                return;
-            }
-            
         } catch (Exception ex) {
             Logger.getLogger(Table.class.getName()).log(Level.SEVERE, null, ex);
         }
         return;
     }
-    */
+    
     
     
     ///////////////////////

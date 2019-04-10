@@ -102,13 +102,24 @@ public class Block {
     // MÉTODOS IMPLEMENTADOS PARA O TRABALHO
     
     public long getMaiorRegistro() {
-        long maior = 0;
+        Long maior = 0L;
         
         if (isEmpty()) {
             return 0;
         }
         
-        for (int i = 0; i < records.length; i++) {
+        for (Record record : records) {
+            try {
+                if (record.getPrimaryKey() > maior) {
+                    maior = record.getPrimaryKey();
+                }
+            } catch (Exception ex) {
+                break;
+            }
+        }
+        
+        
+/*        for (int i = 0; i < records.length; i++) {
             //System.out.println(i);
             if (!(records[i] == null)) {
                 if (records[i].getPrimaryKey() >= maior) {
@@ -116,7 +127,7 @@ public class Block {
                 }
             }
 
-        }
+        }*/
         return maior;
     }
     
