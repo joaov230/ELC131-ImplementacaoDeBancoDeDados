@@ -16,7 +16,9 @@ public class MergeJoin implements Operation {
     
     TableTuple currentTuple1;
     TableTuple currentTuple2;
-    TableTuple nextTuple;
+
+    TableTuple nextTuple1;
+    TableTuple nextTuple2;
     
     public MergeJoin(Operation s1, Operation s2) {
         this.s1 = s1;
@@ -29,45 +31,92 @@ public class MergeJoin implements Operation {
         s1.open();
         s2.open();
         
-        currentTuple1 = null;
-        currentTuple2 = null;
-        nextTuple = null;
+        currentTuple1 = (TableTuple)s1.next();
+        currentTuple2 = (TableTuple)s2.next();
+        
+        while (s1.hasNext() || s2.hasNext()) {
+                
+            // CurrentTuple já está na posição certa 
+            if (currentTuple1.primaryKey == currentTuple2.primaryKey) {
+                // Calcula o próximo
+                nextTuple1 = (TableTuple)s1.next();
+                //nextTuple2 = (TableTuple)s2.next();
+                    
+                while (s1.hasNext() || s2.hasNext()) {
+                    if (nextTuple1.primaryKey == nextTuple2.primaryKey) {
+                        // nextTuple1 e 2 estão certas e existe próxima
+                        break;
+                    } else if (nextTuple1.primaryKey > nextTuple2.primaryKey) {
+                        if (s2.hasNext()) {
+                            nextTuple2 = (TableTuple)s2.next();
+                        }
+                    } else if (nextTuple1.primaryKey < nextTuple2.primaryKey) {
+                        if (s1.hasNext()) {
+                            nextTuple1 = (TableTuple)s1.next();
+                        }
+                    }
+                }
+                
+                break;
+            } else if (currentTuple1.primaryKey > currentTuple2.primaryKey) {
+                // Incrementa o currentTuple2
+                if (s2.hasNext()) {
+                    currentTuple2 = (TableTuple)s2.next();
+                }
+            } else if (currentTuple1.primaryKey < currentTuple2.primaryKey) {
+                // Incrementa o currentTuple1
+                if (s1.hasNext()) {
+                    currentTuple1 = (TableTuple)s1.next();
+                }
+            }
+        }
     }
     
 
     @Override
     public Tuple next() throws Exception {
-        if (currentTuple1 == null) { // Primeira execução
-            TableTuple curTuple1 = (TableTuple)s1.next();
-            TableTuple curTuple2 = (TableTuple)s2.next();
-            
-
-            TableTuple rec = new TableTuple();
-            rec.primaryKey = curTuple1.primaryKey;
-            rec.content = curTuple1.content + " " + curTuple2.content;
-            
-            currentTuple1 = curTuple1;
-            currentTuple2 = curTuple2;
-            return rec;
-        } else {
-            // Verifica hasNext() no s1
-            // Pega o s1.next() e salva em currentTuple1
-            // Verifica se fecha com a condição currentTuple1.primaryKey == currentTuple2.primaryKey
-            // Se sim, dá merge e retorna o record gerado do merge
-            // Se não, do { recTuple = s2.next() } while (currentTuple1 != recTuple.primaryKey)
-            // Se chegou no final, retorna null
-            // Senão, Atualiza o currentTuple2 = recTuple
-                // Dá merge do currentTuple2 com currentTuple1
-                // Retorna o record gerado do merge
+        // Salva currentTuple num rec para retorno
+        TableTuple rec = new TableTuple();
+        rec.primaryKey = currentTuple1.primaryKey;
+        rec.content = currentTuple1.content + " " + currentTuple2.content;
+        
+        
+        // currentTuple = nextTuple
+        currentTuple1 = nextTuple1;
+        currentTuple2 = nextTuple2;
+        
+        
+        // Calcula a nextTuple1 e 2
+        nextTuple1 = (TableTuple)s1.next();
+        //nextTuple2 = (TableTuple)s2.next();
+        
+        while (s1.hasNext() || s2.hasNext()) {
+            if (nextTuple1.primaryKey == nextTuple2.primaryKey) {
+                // nextTuple1 e 2 estão certas e existe próxima
+                break;
+            } else if (nextTuple1.primaryKey > nextTuple2.primaryKey) {
+                if (s2.hasNext()) {
+                    nextTuple2 = (TableTuple)s2.next();
+                }
+            } else if (nextTuple1.primaryKey < nextTuple2.primaryKey) {
+                if (s1.hasNext()) {
+                    nextTuple1 = (TableTuple)s1.next();
+                }
+            }
         }
-        return null;
+        
+        
+        return rec;
     }
     
     // Fazer duplicatas das operações só pra verificar se tem próximo
     @Override
     public boolean hasNext() throws Exception {
-        
-        return false;
+        if (currentTuple1.primaryKey == currentTuple2.primaryKey) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
 
