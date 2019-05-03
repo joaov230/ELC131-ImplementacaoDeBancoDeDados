@@ -8,6 +8,7 @@ package ibd;
 import static ibd.Utils.createTable;
 import ibd.query.BlockNestedLoopJoin;
 import ibd.query.BlockScan;
+import ibd.query.MergeJoin;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ibd.query.NestedLoopJoin;
@@ -187,17 +188,46 @@ public class Main {
             //m.testNestedLoopJoinQuery();
             //m.testMultipleJoinsQuery();;
             //m.testBlockNestedLoopJoinQuery();
+            
             Table table1 = createTable("c:\\teste\\ibd","t1.ibd", 100, true, 2);
             Table table2 = createTable("c:\\teste\\ibd","t2.ibd", 100, true, 3);
             
             
-            Operation s2 = new OrderedScan(new TableScan(table1));
+            //////////////////////
+            // Teste do OrderedScan
+            Operation s1 = new OrderedScan(new TableScan(table1));
+            Operation s2 = new OrderedScan(new TableScan(table2));
+            
+            s1.open();
+            while(s1.hasNext()) {
+                TableTuple r = (TableTuple)s1.next();
+                System.out.print(r.primaryKey + "  ");
+            }
+
+            System.out.println(" ");
             
             s2.open();
             while(s2.hasNext()) {
                 TableTuple r = (TableTuple)s2.next();
-                System.out.println(r.primaryKey);
+                System.out.print(r.primaryKey + "  ");
             }
+            
+            System.out.println(" ");
+
+            
+            //////////////////////
+            // Teste do MergeJoin
+            Operation s3 = new OrderedScan(new TableScan(table1));
+            Operation s4 = new OrderedScan(new TableScan(table2));
+            
+            Operation mj = new MergeJoin(s3, s4);
+            
+            mj.open();
+            while(mj.hasNext()) {
+                TableTuple r = (TableTuple)mj.next();
+                System.out.println("primaryKey: " + r.primaryKey + " | Conteudo: " + r.content);
+            }
+            
             
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

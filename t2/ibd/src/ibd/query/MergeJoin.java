@@ -7,7 +7,7 @@ package ibd.query;
 
 /**
  *
- * @author Glenio
+ * @author Joaov230
  */
 public class MergeJoin implements Operation {
 
@@ -40,7 +40,7 @@ public class MergeJoin implements Operation {
             if (currentTuple1.primaryKey == currentTuple2.primaryKey) {
                 // Calcula o próximo
                 nextTuple1 = (TableTuple)s1.next();
-                //nextTuple2 = (TableTuple)s2.next();
+                nextTuple2 = currentTuple2;
                     
                 while (s1.hasNext() || s2.hasNext()) {
                     if (nextTuple1.primaryKey == nextTuple2.primaryKey) {
@@ -88,7 +88,6 @@ public class MergeJoin implements Operation {
         
         // Calcula a nextTuple1 e 2
         nextTuple1 = (TableTuple)s1.next();
-        //nextTuple2 = (TableTuple)s2.next();
         
         while (s1.hasNext() || s2.hasNext()) {
             if (nextTuple1.primaryKey == nextTuple2.primaryKey) {

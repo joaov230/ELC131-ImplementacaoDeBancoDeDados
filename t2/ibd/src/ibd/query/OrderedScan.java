@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author Glenio
+ * @author Joaov230
  */
 public class OrderedScan implements Operation {
     public int currentRecord;
