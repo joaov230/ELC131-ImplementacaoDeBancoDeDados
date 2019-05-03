@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import ibd.query.NestedLoopJoin;
 import ibd.query.Operation;
+import ibd.query.OrderedScan;
 import ibd.query.TableTuple;
 import ibd.query.TableScan;
 
@@ -186,7 +187,17 @@ public class Main {
             //m.testNestedLoopJoinQuery();
             //m.testMultipleJoinsQuery();;
             //m.testBlockNestedLoopJoinQuery();
+            Table table1 = createTable("c:\\teste\\ibd","t1.ibd", 100, true, 2);
+            Table table2 = createTable("c:\\teste\\ibd","t2.ibd", 100, true, 3);
             
+            
+            Operation s2 = new OrderedScan(new TableScan(table1));
+            
+            s2.open();
+            while(s2.hasNext()) {
+                TableTuple r = (TableTuple)s2.next();
+                System.out.println(r.primaryKey);
+            }
             
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
