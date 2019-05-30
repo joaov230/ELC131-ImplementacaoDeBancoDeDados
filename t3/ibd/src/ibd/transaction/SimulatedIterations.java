@@ -20,6 +20,7 @@ public class SimulatedIterations {
     public void addTransaction(Transaction t) {
         transactions.add(t);
         t.setId(transactions.size());
+        t.setIdade(transactions.size());
     }
 
     public static char getChar(int value) {

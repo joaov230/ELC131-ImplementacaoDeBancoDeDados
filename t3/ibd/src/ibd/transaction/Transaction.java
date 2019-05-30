@@ -21,8 +21,15 @@ public class Transaction {
     private boolean commited = false;
     private int id;
     
+    // Criado para saber quem é mais velho
+    // Quem tiver o maior numero, é o mais novo
+    private int BenjaminButtonIdade;
     
+    public void setIdade (int idade) {
+        this.BenjaminButtonIdade = idade;
+    }
     
+    ////////////////////
     
     public int getId(){
     return id;

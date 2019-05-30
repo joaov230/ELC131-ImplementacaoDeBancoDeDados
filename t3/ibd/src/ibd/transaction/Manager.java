@@ -18,13 +18,10 @@ public class Manager {
     static int cont = 0;
     
     public Record processNextInstruction(Transaction t) throws Exception {
-        
-        
         if (!t.waitingLockRelease()) {
             Transaction toAbort = lockTable.queueTransaction(t.getCurrentInstruction());
             if (toAbort!=null)
             {
-                
                 abort(toAbort);
                 return null;
             }
@@ -34,8 +31,13 @@ public class Manager {
             return t.processCurrentInstruction();
         }
         
-        return null;
+        ///////// ALTERAÇÕES PARA O TRABALHO /////////
+        
+        
 
+        //////////////////////////////////////////////
+        
+        return null;
     }
 
 
