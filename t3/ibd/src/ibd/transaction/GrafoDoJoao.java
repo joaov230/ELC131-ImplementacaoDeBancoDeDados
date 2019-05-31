@@ -50,7 +50,7 @@ public class GrafoDoJoao {
     public void unlinkVertice (int abortado) {
         // Desconecta todas as conexões de saída dessa transação
         getVerticeById(abortado).unlinkTudo();
-       
+        
         // Desconecta também todas as conexões de entrada do abortado
         for (Vertice vert : vertices) {
             if (vert.isAdjacente(abortado)) {
