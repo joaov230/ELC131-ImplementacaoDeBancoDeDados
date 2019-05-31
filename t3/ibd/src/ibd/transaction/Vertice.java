@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author João Vitor Forgearini Beltrame (30.05.2019)
+ * @author João Vitor Forgearini Beltrame (30.05.2019) key 1615 64449805
  */
 public class Vertice {
     private Integer verticeId;
@@ -36,21 +36,10 @@ public class Vertice {
         adjacentes.add(new Integer(idAdjacente));
     }
     
-    /*
-    public int findAdjacente (Integer adj) {
-        for (int i = 0; i < adjacentes.size(); i++) {
-            if (adjacentes.get(i) == adj) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    */
-    
     public int removeAdjacente (int idAdjacente) {
         for (int i = 0; i < adjacentes.size(); i++) {
             if (adjacentes.get(0).intValue() == idAdjacente) {
-                adjacentes.remove(i); // Remove o objeto adjacente
+                adjacentes.remove(i); // Remove adjacente que deve ser retirado
             }
         }
         

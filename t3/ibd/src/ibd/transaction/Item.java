@@ -58,7 +58,7 @@ public class Item {
                 grafo.linkVertices(t1.getId(), t2.getId());
 
                 if (grafo.temCiclo()) {
-                    // Se t1 for mais nova que t2
+                    // Se t1 for mais nova que t2, retorna t1, senão, t2
                     if (t1.getBenjaminButtonIdade() > t2.getBenjaminButtonIdade()) {
                         grafo.unlinkVertice(t1.getId());
                         return t1;

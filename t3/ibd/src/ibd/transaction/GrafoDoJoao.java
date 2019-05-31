@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author João Vitor Forgearini Beltrame (30.05.2019)
+ * @author João Vitor Forgearini Beltrame (30.05.2019) key 1622 106039872
  */
 public class GrafoDoJoao {
    
@@ -20,6 +20,7 @@ public class GrafoDoJoao {
         vertices = new ArrayList<Vertice>();
     }
    
+    // Adiciona um vertice (se ele já existir no grafo, não é adicionado novamente)
     public void addVertice (int id) {
         for (Vertice vert : vertices) {
             if (vert.getVerticeId() == id) {
@@ -41,10 +42,11 @@ public class GrafoDoJoao {
     
     // Conecta dois vertices dependente -> independente
     public void linkVertices (int dependente, int independente) {
-        // Se não está na lista de adjacentes, adiciona
+        // Pega o vertice do grafo pelo id dele
         Vertice vDependente = getVerticeById(dependente);
         Vertice vIndependente = getVerticeById(independente);
         
+        // Se não está na lista de adjacentes, adiciona
         if (vDependente.isAdjacente(independente)) {
             return;
         } else {
@@ -75,12 +77,15 @@ public class GrafoDoJoao {
         return verificaCicloRecursivo(vertices.get(0));
     }
     
+    // Método recursivo que verifica se tem ciclos
     private boolean verificaCicloRecursivo (Vertice vert) {
         if (vert.visitado) {
             return true;
         } else {
             vert.visitado = true;
             
+            // Acessa os adjacentes, se tiver ciclo, retorna true, senão, continua executando
+            // até chegar no final do método, que retorna false
             for (Integer adj : vert.adjacentes) {
                 if(verificaCicloRecursivo(getVerticeById(adj))) {
                     return true;
@@ -92,7 +97,7 @@ public class GrafoDoJoao {
     }
     
     
-    
+    // Método para o print do grafo
     public void printGrafo () {
         for(Vertice vert : vertices) {
             System.out.print("Vertice " + vert.getVerticeId());
