@@ -25,8 +25,12 @@ public class Transaction {
     // Quem tiver o maior numero, é o mais novo
     private int BenjaminButtonIdade;
     
-    public void setIdade (int idade) {
+    public void setBenjaminButtonIdade (int idade) {
         this.BenjaminButtonIdade = idade;
+    }
+    
+    public int getBenjaminButtonIdade () {
+        return BenjaminButtonIdade;
     }
     
     ////////////////////

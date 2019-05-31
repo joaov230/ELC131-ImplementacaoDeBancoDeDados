@@ -22,6 +22,8 @@ public class Main {
     
     public void test1() throws Exception{
         Table table1 = Utils.createTable("c:\\teste\\ibd","t1.ibd",1000, true, 1);
+        
+        /*
         Transaction t1 = new Transaction();
         t1.addInstruction(new Instruction(table1, Instruction.READ, SimulatedIterations.getValue('A'), null));
         t1.addInstruction(new Instruction(table1, Instruction.WRITE, SimulatedIterations.getValue('B'), "bla"));
@@ -56,8 +58,20 @@ public class Main {
         simulation.addTransaction(t4);
         simulation.addTransaction(t5);
         simulation.run();
+        */
         
-        
+        Transaction t1 = new Transaction();
+        t1.addInstruction(new Instruction(table1, Instruction.READ, SimulatedIterations.getValue('A'), null));
+        t1.addInstruction(new Instruction(table1, Instruction.WRITE, SimulatedIterations.getValue('B'), "xx"));
+
+        Transaction t2 = new Transaction();
+        t2.addInstruction(new Instruction(table1, Instruction.READ, SimulatedIterations.getValue('B'), null));
+        t2.addInstruction(new Instruction(table1, Instruction.WRITE, SimulatedIterations.getValue('A'), "yy"));
+
+        SimulatedIterations simulation = new SimulatedIterations();
+        simulation.addTransaction(t1);
+        simulation.addTransaction(t2);
+        simulation.run();
         
     }
     

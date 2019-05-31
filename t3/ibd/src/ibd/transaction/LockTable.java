@@ -23,7 +23,7 @@ public class LockTable {
     
     
     private Item getItem(Instruction i){
-    String key = i.getTable().key + "(" + i.getPk() + ")";
+        String key = i.getTable().key + "(" + i.getPk() + ")";
         Item item = itens.get(key);
         if (item == null) {
             item = new Item(this, i.getTable(), i.getPk());

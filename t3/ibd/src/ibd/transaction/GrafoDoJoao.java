@@ -21,6 +21,11 @@ public class GrafoDoJoao {
     }
    
     public void addVertice (int id) {
+        for (Vertice vert : vertices) {
+            if (vert.getVerticeId() == id) {
+                return;
+            }
+        }
         vertices.add(new Vertice(id));
     }
    

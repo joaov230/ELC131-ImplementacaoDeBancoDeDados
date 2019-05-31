@@ -21,6 +21,8 @@ public class Item {
     public LockTable lockTable;
 
     ArrayList<Lock> lockRequests = new ArrayList<>();
+    
+    GrafoDoJoao grafo = new GrafoDoJoao();
 
     public Item(LockTable lockTable, Table table, long pk) {
         this.table = table;
@@ -30,18 +32,41 @@ public class Item {
 
     public Transaction addToQueue(Transaction t, Instruction instruction) {
 
-        /////// ALTERAÇÃO DO CÓDIGO PRO TRABALHO ///////
-        
         if (!alreadyInQueue(t, instruction.getMode())) {
             Lock l = new Lock(t, instruction.getMode());
             lockRequests.add(l);
             instruction.setItem(this);
+            
+            //// O QUE FOI MODIFICADO ////
+
+            grafo.addVertice(t.getId());
+            
+            Transaction t1 = t;
+            Transaction t2 = null;
+           
+            for (int i = lockRequests.size()-1; i >= 0; i--) {
+                if ((lockRequests.get(i).mode == WRITE) && (lockRequests.get(i).transaction.getCurrentInstruction().getItem() == instruction.getItem())) {
+                    t2 = lockRequests.get(i).transaction;
+                    break;
+                }
+            }
+            
+            if (t2 != null) {
+                grafo.linkVertices(t2.getId(), t1.getId());
+            }
+            
+            if (grafo.temCiclo()) {
+                // Se t1 for mais nova que t2
+                if (t1.getBenjaminButtonIdade() > t2.getBenjaminButtonIdade()) {
+                    return t1;
+                } else {
+                    return t2;
+                }
+            }
+            
+            //////////////////////////////
         }
         
-        
-        
-        
-        ////////////////////////////////////////////////
         
         return null;
 
@@ -52,9 +77,9 @@ public class Item {
             Lock l = lockRequests.get(i);
             if (l.transaction.equals(t)) {
                 if (mode == l.mode || l.mode==WRITE) {
-                return true;
+                    return true;
+                }
             }
-        }
         }
         return false;
     }
