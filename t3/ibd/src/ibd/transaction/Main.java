@@ -60,6 +60,7 @@ public class Main {
         simulation.run();
         */
         
+        /*
         Transaction t1 = new Transaction();
         t1.addInstruction(new Instruction(table1, Instruction.READ, SimulatedIterations.getValue('A'), null));
         t1.addInstruction(new Instruction(table1, Instruction.WRITE, SimulatedIterations.getValue('B'), "xx"));
@@ -72,6 +73,45 @@ public class Main {
         simulation.addTransaction(t1);
         simulation.addTransaction(t2);
         simulation.run();
+        */
+        
+        
+        GrafoDoJoao grafo = new GrafoDoJoao();
+        
+        grafo.addVertice(1);
+        grafo.addVertice(2);
+        grafo.addVertice(3);
+        grafo.addVertice(4);
+        // Esse vertice já existe e não deve ser adicionado
+        grafo.addVertice(3);
+        
+        grafo.linkVertices(2, 1);
+        grafo.linkVertices(1, 3);
+        grafo.linkVertices(3, 4);
+        // Gera um ciclo
+        grafo.linkVertices(4, 2);
+        // É repetido
+        grafo.linkVertices(2, 1);
+        
+        if (grafo.temCiclo()) {
+            System.out.println("Tem ciclo");
+        } else {
+            System.out.println("Não tem ciclo");
+        }
+        
+        grafo.printGrafo();
+        System.out.println();
+        
+        grafo.unlinkVertice(4);
+        
+        if (grafo.temCiclo()) {
+            System.out.println("Tem ciclo");
+        } else {
+            System.out.println("Não tem ciclo");
+        }
+
+        System.out.println();
+        grafo.printGrafo();
         
     }
     

@@ -46,9 +46,10 @@ public class Item {
             Transaction t2 = null;
             
             if (instruction.getMode() == READ) {
-                for (int i = lockRequests.size()-1; i >= 0; i--) {
-                    if (lockRequests.get(i).mode == WRITE) {
-                        t2 = lockRequests.get(i).transaction;
+                for (Lock lo : lockRequests) {
+                    if (lo.mode == WRITE) {
+                        t2 = lo.transaction;
+                        break;
                     }
                 }
             } else if (instruction.getMode() == WRITE) {
@@ -56,7 +57,7 @@ public class Item {
             }
             
             if (t2 != null) {
-                grafo.linkVertices(t2.getId(), t1.getId());
+                grafo.linkVertices(t1.getId(), t2.getId());
 
                 if (grafo.temCiclo()) {
                     // Se t1 for mais nova que t2
@@ -69,6 +70,7 @@ public class Item {
                     }
                 }
             }
+            
             //////////////////////////////
         }
         

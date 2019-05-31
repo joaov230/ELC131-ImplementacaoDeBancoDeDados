@@ -19,20 +19,21 @@ public class Vertice {
     public Vertice (int verticeId) {
         this.verticeId = (Integer) verticeId;
         adjacentes = new ArrayList<Integer>();
+        visitado = false;
     }
     
     ///////////////////
     // Vertice
     
     public int getVerticeId () {
-        return (int) verticeId;
+        return verticeId.intValue();
     }
     
     ///////////////////
     // Adjacentes
     
     public void addAdjacente (int idAdjacente) {
-        adjacentes.add(idAdjacente);
+        adjacentes.add(new Integer(idAdjacente));
     }
     
     /*
@@ -47,9 +48,9 @@ public class Vertice {
     */
     
     public int removeAdjacente (int idAdjacente) {
-        for (Integer adj : adjacentes) {
-            if (adj == idAdjacente) {
-                adjacentes.remove(adj); // Remove o objeto adjacente
+        for (int i = 0; i < adjacentes.size(); i++) {
+            if (adjacentes.get(0).intValue() == idAdjacente) {
+                adjacentes.remove(i); // Remove o objeto adjacente
             }
         }
         
@@ -61,15 +62,22 @@ public class Vertice {
     }
     
     public int getAdjacente (int iterador) {
-        return adjacentes.get(iterador);
+        return adjacentes.get(iterador).intValue();
     }
     
     public boolean isAdjacente (int id) {
         for (Integer i : adjacentes) {
-            if (i == id) {
+            if (i.intValue() == id) {
                 return true;
             }
         }
         return false;
+    }
+    
+    
+    public void printAdjacentes () {
+        for (Integer adj : adjacentes) {
+            System.out.print(" -> " + adj.intValue());
+        }
     }
 }
