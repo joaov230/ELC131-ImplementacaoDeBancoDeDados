@@ -37,6 +37,7 @@ public class Item {
             instruction.setItem(this);
             
             //// O QUE FOI MODIFICADO ////
+            // Autor: João Vitor Forgearini Beltrame (31.05.2019) key 2001 10174071
 
             grafo.addVertice(t.getId());
             
