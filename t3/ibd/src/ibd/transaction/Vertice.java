@@ -35,6 +35,17 @@ public class Vertice {
         adjacentes.add(idAdjacente);
     }
     
+    /*
+    public int findAdjacente (Integer adj) {
+        for (int i = 0; i < adjacentes.size(); i++) {
+            if (adjacentes.get(i) == adj) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    */
+    
     public int removeAdjacente (int idAdjacente) {
         for (Integer adj : adjacentes) {
             if (adj == idAdjacente) {

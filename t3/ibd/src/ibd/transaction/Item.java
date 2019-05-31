@@ -6,6 +6,7 @@
 package ibd.transaction;
 
 import ibd.Table;
+import static ibd.transaction.Instruction.READ;
 import static ibd.transaction.Instruction.WRITE;
 import java.util.ArrayList;
 
@@ -43,27 +44,31 @@ public class Item {
             
             Transaction t1 = t;
             Transaction t2 = null;
-           
-            for (int i = lockRequests.size()-1; i >= 0; i--) {
-                if ((lockRequests.get(i).mode == WRITE) && (lockRequests.get(i).transaction.getCurrentInstruction().getItem() == instruction.getItem())) {
-                    t2 = lockRequests.get(i).transaction;
-                    break;
+            
+            if (instruction.getMode() == READ) {
+                for (int i = lockRequests.size()-1; i >= 0; i--) {
+                    if (lockRequests.get(i).mode == WRITE) {
+                        t2 = lockRequests.get(i).transaction;
+                    }
                 }
+            } else if (instruction.getMode() == WRITE) {
+                t2 = lockRequests.get(0).transaction;
             }
             
             if (t2 != null) {
                 grafo.linkVertices(t2.getId(), t1.getId());
-            }
-            
-            if (grafo.temCiclo()) {
-                // Se t1 for mais nova que t2
-                if (t1.getBenjaminButtonIdade() > t2.getBenjaminButtonIdade()) {
-                    return t1;
-                } else {
-                    return t2;
+
+                if (grafo.temCiclo()) {
+                    // Se t1 for mais nova que t2
+                    if (t1.getBenjaminButtonIdade() > t2.getBenjaminButtonIdade()) {
+                        grafo.unlinkVertice(t1.getId());
+                        return t1;
+                    } else {
+                        grafo.unlinkVertice(t2.getId());
+                        return t2;
+                    }
                 }
             }
-            
             //////////////////////////////
         }
         
