@@ -12,9 +12,6 @@ import java.util.ArrayList;
  * @author João Vitor Forgearini Beltrame (30.05.2019)
  */
 public class GrafoDoJoao {
-    private int BRANCOdoJoao = -1;
-    private int CINZAdoJoao = 0;
-    private int PRETOdoJoao = 1;
    
     ArrayList<Vertice> vertices;
 
@@ -27,11 +24,24 @@ public class GrafoDoJoao {
         vertices.add(new Vertice(id));
     }
    
+    // Retorna o vertice pelo Id dele
+    public Vertice getVerticeById (int id) {
+        for (Vertice vert : vertices) {
+            if (id == vert.getVerticeId()) {
+                return vert;
+            }
+        }
+        return null;
+    }
+    
     // Conecta dois vertices dependente -> independente
     public void linkVertices (int independente, int dependente) {
         // Se não está na lista de adjacentes, adiciona
-        if (!vertices.get(dependente).isAdjacente(independente)) {
-            vertices.get(dependente).addAdjacente(independente);
+        Vertice vIndependente = getVerticeById(independente);
+        Vertice vDependente = getVerticeById(dependente);
+        
+        if (!vDependente.isAdjacente(independente)) {
+            vDependente.addAdjacente(independente);
         }
     }
    
@@ -39,7 +49,7 @@ public class GrafoDoJoao {
     // Remove todas as arestas de saída e todas de entrada
     public void unlinkVertice (int abortado) {
         // Desconecta todas as conexões de saída dessa transação
-        vertices.get(abortado).unlinkTudo();
+        getVerticeById(abortado).unlinkTudo();
        
         // Desconecta também todas as conexões de entrada do abortado
         for (Vertice vert : vertices) {
@@ -49,9 +59,26 @@ public class GrafoDoJoao {
         }
     }
    
-    // Retorna o id da transação que vai ser desconectada das demais e que deve ser abortada
-    public int temCiclo () {
-        // TO DO
-        return 0;
+    // Retorna o true se tem ciclo, false se não
+    public boolean temCiclo () {
+        for (Vertice v : vertices) {
+            v.visitado = false;
+        }
+        
+        return verificaCicloRecursivo(vertices.get(0));
+    }
+    
+    private boolean verificaCicloRecursivo (Vertice vert) {
+        if (vert.visitado) {
+            return true;
+        } else {
+            vert.visitado = true;
+            
+            for (Integer adj : vert.adjacentes) {
+                verificaCicloRecursivo(getVerticeById(adj));
+            }
+        }
+        
+        return false;
     }
 }

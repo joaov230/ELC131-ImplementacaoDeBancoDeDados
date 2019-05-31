@@ -30,13 +30,6 @@ public class Manager {
         if (t.canLockCurrentInstruction()) {
             return t.processCurrentInstruction();
         }
-        
-        ///////// ALTERAÇÕES PARA O TRABALHO /////////
-        
-        
-
-        //////////////////////////////////////////////
-        
         return null;
     }
 

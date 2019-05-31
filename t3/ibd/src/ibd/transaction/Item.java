@@ -30,13 +30,19 @@ public class Item {
 
     public Transaction addToQueue(Transaction t, Instruction instruction) {
 
-
+        /////// ALTERAÇÃO DO CÓDIGO PRO TRABALHO ///////
+        
         if (!alreadyInQueue(t, instruction.getMode())) {
             Lock l = new Lock(t, instruction.getMode());
             lockRequests.add(l);
             instruction.setItem(this);
         }
-
+        
+        
+        
+        
+        ////////////////////////////////////////////////
+        
         return null;
 
     }

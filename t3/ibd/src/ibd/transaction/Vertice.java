@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Vertice {
     private Integer verticeId;
     public ArrayList<Integer> adjacentes;
+    public Boolean visitado;
     
     public Vertice (int verticeId) {
         this.verticeId = (Integer) verticeId;
@@ -37,9 +38,10 @@ public class Vertice {
     public int removeAdjacente (int idAdjacente) {
         for (Integer adj : adjacentes) {
             if (adj == idAdjacente) {
-                adjacentes.remove(adj);
+                adjacentes.remove(adj); // Remove o objeto adjacente
             }
         }
+        
         return idAdjacente;
     }
     
