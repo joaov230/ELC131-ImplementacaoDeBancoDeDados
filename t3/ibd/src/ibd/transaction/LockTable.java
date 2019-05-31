@@ -15,10 +15,11 @@ import java.util.Iterator;
  */
 public class LockTable {
     private Hashtable<String, Item> itens = new Hashtable<>();
+    GrafoDoJoao grafo = new GrafoDoJoao();
     
     public Transaction queueTransaction(Instruction i) {
         Item item = getItem(i);
-        return item.addToQueue(i.getTransaction(), i);
+        return item.addToQueue(i.getTransaction(), i, grafo);
     }
     
     

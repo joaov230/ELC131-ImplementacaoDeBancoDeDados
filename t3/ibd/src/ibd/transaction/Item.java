@@ -23,15 +23,13 @@ public class Item {
 
     ArrayList<Lock> lockRequests = new ArrayList<>();
     
-    GrafoDoJoao grafo = new GrafoDoJoao();
-
     public Item(LockTable lockTable, Table table, long pk) {
         this.table = table;
         primaryKey = pk;
         this.lockTable = lockTable;
     }
 
-    public Transaction addToQueue(Transaction t, Instruction instruction) {
+    public Transaction addToQueue(Transaction t, Instruction instruction, GrafoDoJoao grafo) {
 
         if (!alreadyInQueue(t, instruction.getMode())) {
             Lock l = new Lock(t, instruction.getMode());

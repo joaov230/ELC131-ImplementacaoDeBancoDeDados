@@ -23,13 +23,10 @@ public class GrafoDoJoao {
     public void addVertice (int id) {
         for (Vertice vert : vertices) {
             if (vert.getVerticeId() == id) {
-                System.out.println("Esse vertice já existe e não será adicionado");
                 return;
             }
         }
         vertices.add(new Vertice(id));
-        //System.out.println("Adicionado::  Posição: " + (vertices.size()-1) + " | Id: " + (id));
-        //System.out.println();
     }
    
     // Retorna o vertice pelo Id dele
@@ -46,19 +43,13 @@ public class GrafoDoJoao {
     public void linkVertices (int dependente, int independente) {
         // Se não está na lista de adjacentes, adiciona
         Vertice vDependente = getVerticeById(dependente);
-        //System.out.println("getVerticeById Dependente: " + vDependente.getVerticeId());
         Vertice vIndependente = getVerticeById(independente);
-        //System.out.println("getVerticeById Independente: " + vIndependente.getVerticeId());
         
         if (vDependente.isAdjacente(independente)) {
-            System.out.println("Essa conexão já existe e não será feita");
             return;
         } else {
             vDependente.addAdjacente(independente);
-            //System.out.println("Linkou " + vDependente.getVerticeId() + " -> " + vIndependente.getVerticeId());
-
         }
-        //System.out.println();
     }
    
     // É chamada quando tem que desconectar aquele vertice do resto do grafo
@@ -91,7 +82,9 @@ public class GrafoDoJoao {
             vert.visitado = true;
             
             for (Integer adj : vert.adjacentes) {
-                return verificaCicloRecursivo(getVerticeById(adj));
+                if(verificaCicloRecursivo(getVerticeById(adj))) {
+                    return true;
+                }
             }
         }
         
